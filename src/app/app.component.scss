@@ -1,0 +1,18 @@
+$topNavHeight: 3rem;
+.topnav {
+    height: $topNavHeight;
+}
+
+.mat-mdc-table {
+    width: 100%;
+}
+ 
+cdk-virtual-scroll-viewport {
+    height: calc(100vh - $topNavHeight);
+    width: 100%;
+  }
+
+//   .mat-mdc-table-sticky {
+//     transform: translateZ(0);
+//     top: 0;
+//   }
