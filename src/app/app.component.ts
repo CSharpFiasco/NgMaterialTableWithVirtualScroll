@@ -59,12 +59,11 @@ export class AppComponent implements AfterViewInit {
     if(this.peopleData.length === 0) return;
 
     const dataToMutate = this.peopleData[0];
-    console.log(dataToMutate)
     dataToMutate.age = 100;
 
     const updatedData = [
       ...this.peopleData,
-    ]
+    ];
 
     this.peopledataSource?.update(updatedData);
   }
