@@ -20,17 +20,17 @@ export class VirtualScrollDataSource<T>
 {
   private readonly viewPort: CdkVirtualScrollViewport;
 
-  /** Stream of data that is provided to the table. */
+  // Create MatTableDataSource so we can have all sort, filter bells and whistles
+  private readonly matTableDataSource: MatTableDataSource<T>;
 
-  // Create MatTableDataSource so we can have all sort,filter bells and whistles
-  private matTableDataSource: MatTableDataSource<T>;
+  /* As we scroll, new items get rendered. This gets used by the table to know what to render/display */
+  private readonly renderedStream = new BehaviorSubject<T[]>([]);
 
-  private renderedStream = new BehaviorSubject<T[]>([]);
-
-  private subscription = new Subscription();
+  /* Holds subscriptions to dispose of on disconnect */
+  private readonly subscription = new Subscription();
 
   // Expose dataStream to simulate VirtualForOf.dataStream
-  public dataStream: Observable<T[]>;
+  public readonly dataStream: Observable<T[]>;
 
   constructor(viewPort: CdkVirtualScrollViewport) {
     super();
@@ -56,10 +56,15 @@ export class VirtualScrollDataSource<T>
     return this.renderedStream.asObservable();
   }
 
+  /* 
+    Public method to update mat table source
+    renderedStream will emit and update the table
+  */
   update(people: T[]) {
     this.matTableDataSource.data = [...people];
   }
 
+  /* Required by CdkVirtualScrollRepeater interface, but we don't have a use case for it at the moment */
   measureRangeSize(
     _range: ListRange,
     _orientation: 'horizontal' | 'vertical'
@@ -71,6 +76,7 @@ export class VirtualScrollDataSource<T>
     this.subscription.unsubscribe();
   }
 
+  /* Since we only want to render items that fit in the viewport, we slice the range that would exist in the viewport */
   private filterByRangeStream(tableData: Observable<T[]>): Observable<T[]> {
     const rangeStream = this.viewPort.renderedRangeStream.pipe(
       startWith({} as ListRange)
