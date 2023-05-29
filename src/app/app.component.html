@@ -1,5 +1,7 @@
 <div class="topnav">
   <button mat-flat-button color="primary" (click)="loadInData()">Load in data</button>
+  <button mat-flat-button color="primary" (click)="mutateData()">Mutate data</button>
+  <div *ngIf="peopledataSource?.dataStream | async as ds">Count: {{ds.length}}</div>
 </div>
 
 <cdk-virtual-scroll-viewport #viewPort [itemSize]="ITEM_SIZE" matSort>

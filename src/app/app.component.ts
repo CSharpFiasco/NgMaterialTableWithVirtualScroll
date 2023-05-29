@@ -25,6 +25,8 @@ export class AppComponent implements AfterViewInit {
   public offset$?: Observable<number>;
   protected peopledataSource!: VirtualScrollDataSource<Person>;
 
+  private peopleData: Person[] = [];
+
   constructor(private httpClient: HttpClient) {}
 
   ngAfterViewInit() {
@@ -46,9 +48,24 @@ export class AppComponent implements AfterViewInit {
       .get<Person[]>('/assets/people.json')
       .pipe(
         tap((people) => {
+          this.peopleData = people;
           this.peopledataSource?.update(people);
         })
       )
       .subscribe();
+  }
+
+  mutateData() {
+    if(this.peopleData.length === 0) return;
+
+    const dataToMutate = this.peopleData[0];
+    console.log(dataToMutate)
+    dataToMutate.age = 100;
+
+    const updatedData = [
+      ...this.peopleData,
+    ]
+
+    this.peopledataSource?.update(updatedData);
   }
 }

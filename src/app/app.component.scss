@@ -1,4 +1,4 @@
-$topNavHeight: 3rem;
+$topNavHeight: 4rem;
 .topnav {
     height: $topNavHeight;
 }
@@ -10,7 +10,11 @@ $topNavHeight: 3rem;
 cdk-virtual-scroll-viewport {
     height: calc(100vh - $topNavHeight);
     width: 100%;
-  }
+}
+
+button:not(:first-child) {
+    margin-left: 8px;
+}
 
 //   .mat-mdc-table-sticky {
 //     transform: translateZ(0);
