@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'test-ng-material-table'`, () => {
+  it(`should have as title 'ng-material-table-with-virtual-scroll'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('test-ng-material-table');
+    expect(app.title).toEqual('ng-material-table-with-virtual-scroll');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('test-ng-material-table app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('ng-material-table-with-virtual-scroll app is running!');
   });
 });
