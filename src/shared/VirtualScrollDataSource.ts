@@ -7,7 +7,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import {
   BehaviorSubject,
   Observable,
-  Subscription,
   combineLatest,
   map,
   startWith,
@@ -17,54 +16,23 @@ export class VirtualScrollDataSource<T>
   extends DataSource<T>
   implements CdkVirtualScrollRepeater<T>
 {
-  private readonly viewPort: CdkVirtualScrollViewport;
-
   // Create MatTableDataSource so we can have all sort, filter bells and whistles
-  private readonly matTableDataSource: MatTableDataSource<T>;
+  private readonly matTableDataSource: MatTableDataSource<T> = new MatTableDataSource<T>([]);
 
-  /* As we scroll, new items get rendered. This gets used by the table to know what to render/display */
-  private readonly renderedStream = new BehaviorSubject<T[]>([]);
-
-  /* Holds subscriptions to dispose of on disconnect */
-  private readonly subscription = new Subscription();
-
-  // Expose dataStream to simulate VirtualForOf.dataStream
+  // Expose dataStream so that the ViewPort knows when data stream changes
   public readonly dataStream: Observable<T[]>;
 
-  constructor(viewPort: CdkVirtualScrollViewport) {
+  constructor(private readonly viewPort: CdkVirtualScrollViewport) {
     super();
-    this.viewPort = viewPort;
 
-    this.matTableDataSource = new MatTableDataSource<T>([]);
     this.dataStream = this.matTableDataSource.connect().asObservable();
 
     this.viewPort.attach(this);
   }
 
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
+  /** Connect is called by table to know what to render */
   connect(): Observable<T[]> {
-    const tableData = this.matTableDataSource.connect();
-    const filtered = this.filterByRangeStream(tableData);
-
-    const filteredSubscription = filtered.subscribe((data) => {
-      this.renderedStream.next(data);
-    });
-
-    this.subscription.add(filteredSubscription);
-
-    return this.renderedStream.asObservable();
-  }
-
-  public getCurrentData(): T[]{
-    return this.matTableDataSource.data;
-  }
-
-  /* 
-    Public method to update mat table source
-    renderedStream will emit and update the table
-  */
-  update(people: T[]) {
-    this.matTableDataSource.data = [...people];
+    return this.filterByRangeStream(this.dataStream);
   }
 
   /* Required by CdkVirtualScrollRepeater interface, but we don't have a use case for it at the moment */
@@ -76,7 +44,15 @@ export class VirtualScrollDataSource<T>
   }
 
   disconnect() {
-    this.subscription.unsubscribe();
+    // Intentionally left empty
+  }
+
+  public getCurrentData(): T[]{
+    return this.matTableDataSource.data;
+  }
+
+  public update(people: T[]) {
+    this.matTableDataSource.data = [...people];
   }
 
   /* Since we only want to render items that fit in the viewport, we slice the range that would exist in the viewport */

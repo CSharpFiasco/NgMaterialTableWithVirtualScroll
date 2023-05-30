@@ -17,6 +17,7 @@ import { VirtualScrollDataSource } from 'src/shared/VirtualScrollDataSource';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements AfterViewInit {
+  /* Height of mat table row */
   protected readonly ITEM_SIZE = 48;
 
   @ViewChild('viewPort')
