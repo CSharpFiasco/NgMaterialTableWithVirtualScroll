@@ -32,7 +32,7 @@ export class VirtualScrollDataSource<T>
 
   /** Connect is called by table to know what to render */
   connect(): Observable<T[]> {
-    return this.filterByRangeStream(this.dataStream);
+    return this.sliceDataByRangeStream(this.dataStream);
   }
 
   /* Required by CdkVirtualScrollRepeater interface, but we don't have a use case for it at the moment */
@@ -56,15 +56,12 @@ export class VirtualScrollDataSource<T>
   }
 
   /* Since we only want to render items that fit in the viewport, we slice the range that would exist in the viewport */
-  private filterByRangeStream(tableData: Observable<T[]>): Observable<T[]> {
-    const rangeStream = this.viewPort.renderedRangeStream.pipe(
-      startWith({} as ListRange)
+  private sliceDataByRangeStream(tableData: Observable<T[]>): Observable<T[]> {
+    const rangeStream = this.viewPort.renderedRangeStream;
+
+    const sliced = combineLatest([tableData, rangeStream]).pipe(
+      map(([data, { start, end }]) => data.slice(start, end))
     );
-    const filtered = combineLatest([tableData, rangeStream]).pipe(
-      map(([data, { start, end }]) => {
-        return start === null || end === null ? data : data.slice(start, end);
-      })
-    );
-    return filtered;
+    return sliced;
   }
 }
