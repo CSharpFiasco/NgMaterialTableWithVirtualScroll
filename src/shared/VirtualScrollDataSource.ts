@@ -1,4 +1,4 @@
-import { DataSource } from '@angular/cdk/collections';
+import { DataSource, ListRange } from '@angular/cdk/collections';
 import {
   CdkVirtualScrollRepeater,
   CdkVirtualScrollViewport,
@@ -12,7 +12,6 @@ import {
   map,
   startWith,
 } from 'rxjs';
-import { ListRange } from '@angular/cdk/collections';
 
 export class VirtualScrollDataSource<T>
   extends DataSource<T>
@@ -54,6 +53,10 @@ export class VirtualScrollDataSource<T>
     this.subscription.add(filteredSubscription);
 
     return this.renderedStream.asObservable();
+  }
+
+  public getCurrentData(): T[]{
+    return this.matTableDataSource.data;
   }
 
   /* 

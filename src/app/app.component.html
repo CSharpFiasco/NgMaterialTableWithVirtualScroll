@@ -5,7 +5,7 @@
 </div>
 
 <cdk-virtual-scroll-viewport #viewPort [itemSize]="ITEM_SIZE" matSort>
-  <mat-table mat-table [dataSource]="peopledataSource">
+  <mat-table mat-table [dataSource]="peopledataSource!">
     <!-- User name Definition -->
     <ng-container matColumnDef="fullName">
       <mat-header-cell *matHeaderCellDef> User name </mat-header-cell>

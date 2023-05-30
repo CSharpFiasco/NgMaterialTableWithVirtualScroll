@@ -17,17 +17,16 @@ import { VirtualScrollDataSource } from 'src/shared/VirtualScrollDataSource';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements AfterViewInit {
-  public readonly ITEM_SIZE = 48;
+  protected readonly ITEM_SIZE = 48;
 
   @ViewChild('viewPort')
-  viewPort?: CdkVirtualScrollViewport;
+  protected viewPort?: CdkVirtualScrollViewport;
 
-  public offset$?: Observable<number>;
-  protected peopledataSource!: VirtualScrollDataSource<Person>;
+  protected offset$?: Observable<number>;
+  protected peopledataSource?: VirtualScrollDataSource<Person>;
 
-  private peopleData: Person[] = [];
-
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {    
+  }
 
   ngAfterViewInit() {
     if (this.viewPort === undefined) {
@@ -36,7 +35,7 @@ export class AppComponent implements AfterViewInit {
 
     this.peopledataSource = new VirtualScrollDataSource<Person>(this.viewPort);
 
-    /* offset for sticky header */
+    // /* offset for sticky header */
     this.offset$ = this.viewPort.renderedRangeStream
     .pipe(
       map((range) => range.start * -this.ITEM_SIZE)
@@ -48,7 +47,6 @@ export class AppComponent implements AfterViewInit {
       .get<Person[]>('/assets/people.json')
       .pipe(
         tap((people) => {
-          this.peopleData = people;
           this.peopledataSource?.update(people);
         })
       )
@@ -56,13 +54,14 @@ export class AppComponent implements AfterViewInit {
   }
 
   mutateData() {
-    if(this.peopleData.length === 0) return;
+    const peopleData = this.peopledataSource?.getCurrentData();
+    if(peopleData === undefined || peopleData.length === 0) return;
 
-    const dataToMutate = this.peopleData[0];
+    const dataToMutate = peopleData[0];
     dataToMutate.age = 100;
 
     const updatedData = [
-      ...this.peopleData,
+      ...peopleData,
     ];
 
     this.peopledataSource?.update(updatedData);
