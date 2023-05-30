@@ -5,11 +5,9 @@ import {
 } from '@angular/cdk/scrolling';
 import { MatTableDataSource } from '@angular/material/table';
 import {
-  BehaviorSubject,
   Observable,
   combineLatest,
   map,
-  startWith,
 } from 'rxjs';
 
 export class VirtualScrollDataSource<T>
