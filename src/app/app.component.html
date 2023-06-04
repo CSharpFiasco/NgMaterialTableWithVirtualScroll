@@ -25,7 +25,15 @@
     </ng-container>
   
     <!-- Header and Row Declarations -->
-    <mat-header-row *matHeaderRowDef="['fullName', 'age', 'email']; sticky: true" [style.top.px]="offset$ | async"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="['fullName', 'age', 'email']; sticky: true" [style.top.px]="tableTopOffset$ | async"></mat-header-row>
     <mat-row *matRowDef="let row; columns: ['fullName', 'age', 'email']"></mat-row>
   </mat-table>
+
+  <mat-paginator #paginator
+                 [length]="totalLength"
+                 [pageSize]="pageSize"
+                 [pageSizeOptions]="pageSizes"
+                 aria-label="Select page"
+                 [style.bottom.px]="paginatorBottomOffset$ | async">
+  </mat-paginator>
 </cdk-virtual-scroll-viewport>

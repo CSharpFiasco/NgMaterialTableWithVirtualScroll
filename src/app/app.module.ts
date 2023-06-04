@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {MatTableModule} from '@angular/material/table';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     FormsModule,
     HttpClientModule,
     MatTableModule,
-    ScrollingModule
+    ScrollingModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
