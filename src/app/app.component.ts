@@ -12,6 +12,8 @@ import {
 } from 'rxjs';
 import { Person } from 'src/models/person';
 import { VirtualScrollDataSource } from 'src/shared/VirtualScrollDataSource';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+
 
 type PageSize = 5 | 10 | 25 | 100 | 1_000 | 10_000;
 
@@ -34,9 +36,14 @@ export class AppComponent implements AfterViewInit {
   protected paginatorBottomOffset$?: Observable<number>;
   protected peopledataSource?: VirtualScrollDataSource<Person>;
 
+  protected readonly columns: string[] = ['fullName', 'age', 'email'];
   protected readonly pageSizes: PageSize[] = [5, 10, 25, 100, 1_000, 10_000];
   protected readonly pageSize: PageSize = 10;
   protected totalLength: number = 0;
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
+  }
 
   private readonly data$ = this.httpClient
   .get<Person[]>('/assets/people.json')

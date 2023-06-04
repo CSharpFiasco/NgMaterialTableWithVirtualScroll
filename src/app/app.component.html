@@ -5,28 +5,31 @@
 </div>
 
 <cdk-virtual-scroll-viewport #viewPort [itemSize]="ITEM_SIZE" matSort>
-  <mat-table mat-table [dataSource]="peopledataSource!">
+  <mat-table [dataSource]="peopledataSource!" 
+  cdkDropList
+  cdkDropListOrientation="horizontal"
+  (cdkDropListDropped)="drop($event)">
     <!-- User name Definition -->
     <ng-container matColumnDef="fullName">
-      <mat-header-cell *matHeaderCellDef> User name </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef cdkDrag> User name </mat-header-cell>
       <mat-cell *matCellDef="let row"> {{row.fullName}} </mat-cell>
     </ng-container>
   
     <!-- Age Definition -->
     <ng-container matColumnDef="age">
-      <mat-header-cell *matHeaderCellDef> Age </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef cdkDrag> Age </mat-header-cell>
       <mat-cell *matCellDef="let row"> {{row.age}} </mat-cell>
     </ng-container>
   
     <!-- Title Definition -->
     <ng-container matColumnDef="email">
-      <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef cdkDrag> Email </mat-header-cell>
       <mat-cell *matCellDef="let row"> {{row.email}} </mat-cell>
     </ng-container>
   
     <!-- Header and Row Declarations -->
-    <mat-header-row *matHeaderRowDef="['fullName', 'age', 'email']; sticky: true" [style.top.px]="tableTopOffset$ | async"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: ['fullName', 'age', 'email']"></mat-row>
+    <mat-header-row *matHeaderRowDef="columns; sticky: true" [style.top.px]="tableTopOffset$ | async"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columns"></mat-row>
   </mat-table>
 
   <mat-paginator #paginator
